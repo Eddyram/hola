@@ -1,0 +1,15 @@
+public class Disponer extends Thread {
+    private final CuentaBancaria cuenta;
+    private final double cantidad;
+
+    public Disponer(CuentaBancaria cuenta, double cantidad) {
+        this.cuenta = cuenta;
+        this.cantidad = cantidad;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Disponiendo $" + cantidad + "...");
+        cuenta.disponer(cantidad);
+    }
+}
