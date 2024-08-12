@@ -1,0 +1,13 @@
+public class Consultar extends Thread {
+    private final CuentaBancaria cuenta;
+
+    public Consultar(CuentaBancaria cuenta) {
+        this.cuenta = cuenta;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Consultando saldo...");
+        System.out.println("Saldo actual: $" + cuenta.consultarSaldo());
+    }
+}
