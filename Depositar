@@ -1,0 +1,15 @@
+public class Depositar extends Thread {
+    private final CuentaBancaria cuenta;
+    private final double cantidad;
+
+    public Depositar(CuentaBancaria cuenta, double cantidad) {
+        this.cuenta = cuenta;
+        this.cantidad = cantidad;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Depositando $" + cantidad + "...");
+        cuenta.depositar(cantidad);
+    }
+}
