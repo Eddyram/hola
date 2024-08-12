@@ -1,0 +1,15 @@
+public class Retirar extends Thread {
+    private final CuentaBancaria cuenta;
+    private final double cantidad;
+
+    public Retirar(CuentaBancaria cuenta, double cantidad) {
+        this.cuenta = cuenta;
+        this.cantidad = cantidad;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Retirando $" + cantidad + "...");
+        cuenta.retirar(cantidad);
+    }
+}
