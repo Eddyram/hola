@@ -1,0 +1,28 @@
+public class Main {
+    public static void main(String[] args) {
+        CuentaBancaria cuenta = new CuentaBancaria(1000);
+
+        // Crear hilos para cada operación
+        Consultar consultar = new Consultar(cuenta);
+        Depositar depositar = new Depositar(cuenta, 500);
+        Retirar retirar = new Retirar(cuenta, 200);
+        Disponer disponer = new Disponer(cuenta, 300);
+
+        // Iniciar los hilos
+        consultar.start();
+        depositar.start();
+        retirar.start();
+        disponer.start();
+
+        // Esperar a que los hilos terminen
+        try {
+            consultar.join();
+            depositar.join();
+            retirar.join();
+            disponer.join();
+        } catch (InterruptedException e) {
+        }
+
+        System.out.println("Operaciones finalizadas. Saldo final: $" + cuenta.consultarSaldo());
+    }
+}
