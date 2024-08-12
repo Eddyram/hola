@@ -1,0 +1,134 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class CajeroAutomaticoGUI extends JFrame {
+    private CuentaBancaria cuenta;
+    private JTextField cantidadField;
+    private JLabel saldoLabel;
+    private String contraseña = "3132"; // Contraseña predefinida
+
+    public CajeroAutomaticoGUI(CuentaBancaria cuenta) {
+        this.cuenta = cuenta;
+        solicitarContraseña();
+    }
+
+    private void solicitarContraseña() {
+        String input = JOptionPane.showInputDialog(this, "Ingrese la contraseña:");
+        
+        if (input != null && input.equals(contraseña)) {
+            initUI();
+        } else {
+            JOptionPane.showMessageDialog(this, "Contraseña incorrecta. El programa se cerrará.");
+            System.exit(0);
+        }
+    }
+
+    private void initUI() {
+        setTitle("Cajero Automático");
+        setSize(300, 200);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        JPanel panel = new JPanel();
+        getContentPane().add(panel);
+        panel.setLayout(null);
+
+        saldoLabel = new JLabel("Saldo: $" + cuenta.consultarSaldo());
+        saldoLabel.setBounds(20, 20, 250, 25);
+        panel.add(saldoLabel);
+
+        JLabel cantidadLabel = new JLabel("Cantidad:");
+        cantidadLabel.setBounds(20, 60, 80, 25);
+        panel.add(cantidadLabel);
+
+        cantidadField = new JTextField(10);
+        cantidadField.setBounds(100, 60, 150, 25);
+        panel.add(cantidadField);
+
+        JButton consultarBtn = new JButton("Consultar");
+        consultarBtn.setBounds(20, 100, 120, 25);
+        consultarBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                consultarSaldo();
+            }
+        });
+        panel.add(consultarBtn);
+
+        JButton depositarBtn = new JButton("Depositar");
+        depositarBtn.setBounds(150, 100, 120, 25);
+        depositarBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                depositarDinero();
+            }
+        });
+        panel.add(depositarBtn);
+
+        JButton retirarBtn = new JButton("Retirar");
+        retirarBtn.setBounds(20, 140, 120, 25);
+        retirarBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                retirarDinero();
+            }
+        });
+        panel.add(retirarBtn);
+
+        JButton disponerBtn = new JButton("Disponer");
+        disponerBtn.setBounds(150, 140, 120, 25);
+        disponerBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                disponerDinero();
+            }
+        });
+        panel.add(disponerBtn);
+    }
+
+    private void consultarSaldo() {
+        JOptionPane.showMessageDialog(this, "Saldo actual: $" + cuenta.consultarSaldo());
+        saldoLabel.setText("Saldo: $" + cuenta.consultarSaldo());
+    }
+
+    private void depositarDinero() {
+        try {
+            double cantidad = Double.parseDouble(cantidadField.getText());
+            cuenta.depositar(cantidad);
+            saldoLabel.setText("Saldo: $" + cuenta.consultarSaldo());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingresa una cantidad válida.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void retirarDinero() {
+        try {
+            double cantidad = Double.parseDouble(cantidadField.getText());
+            boolean exito = cuenta.retirar(cantidad);
+            if (exito) {
+                saldoLabel.setText("Saldo: $" + cuenta.consultarSaldo());
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingresa una cantidad válida.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void disponerDinero() {
+        try {
+            double cantidad = Double.parseDouble(cantidadField.getText());
+            cuenta.disponer(cantidad);
+            saldoLabel.setText("Saldo: $" + cuenta.consultarSaldo());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingresa una cantidad válida.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        CuentaBancaria cuenta = new CuentaBancaria(6343);
+        SwingUtilities.invokeLater(() -> {
+            CajeroAutomaticoGUI cajero = new CajeroAutomaticoGUI(cuenta);
+            cajero.setVisible(true);
+        });
+    }
+}
